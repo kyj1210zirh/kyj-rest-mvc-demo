@@ -19,11 +19,11 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name="post")
+@Table(name="posts")
 public class PostEntity {
 	
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 	
 	//로그인 기능 구현시 외래키 설정.

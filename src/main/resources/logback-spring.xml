@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="60 seconds">
+	<!-- use Spring default values -->
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+	<property name="LOGS_ABSOLUTE_PATH" value="logs" />
+	
+	<logger name="org.hibernate.SQL" level="DEBUG" />
+    <logger name="org.hibernate.tool.hbm2ddl" level="DEBUG"/>
+    <logger name="org.hibernate.type" level="TRACE" />
+    <logger name="org.hibernate.stat" level="DEBUG" />
+    <logger name="org.hibernate.type.BasicTypeRegistry" level="WARN" />
+	
+	<appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>%d{HH:mm:ss.SSS} %-4relative [%thread] %-5level %logger{35} - %msg%n</pattern>
+		</encoder>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${LOGS_ABSOLUTE_PATH}/kyjapp_%d{yyyy-MM-dd}_%i.log</fileNamePattern>
+			<timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<maxFileSize>1024MB</maxFileSize> <!-- 로그 분할 용량 -->
+	        </timeBasedFileNamingAndTriggeringPolicy>
+	        <maxHistory>30</maxHistory> <!-- 로그 보관일 --> 
+		</rollingPolicy>
+	</appender>
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<pattern>${CONSOLE_LOG_PATTERN}</pattern> <!-- defaults.xml의 기본값 참조 -->
+		</layout>
+	</appender>
+	<logger name="org.springframework" level="info" />
+	<logger name="org.springframework.security" level="info" />
+	<root level="info">
+		<appender-ref ref="STDOUT" />
+		<appender-ref ref="FILE" />
+	</root>
+</configuration>

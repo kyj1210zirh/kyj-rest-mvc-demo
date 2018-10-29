@@ -45,22 +45,34 @@
 				<table id="mytable" class="table table-bordred table-striped">
 					<thead>
 						<tr>
-							<th>No</th>
-							<th>Title</th>
-							<th>Name</th>
-							<th>Date</th>
-							<th>Views</th>
+							<th width="7%">No</th>
+							<th width="42%">Title</th>
+							<th width="14%">Name</th>
+							<th width="20%">Date</th>
+							<th width="7%">Views</th>
 						</tr>
 					</thead>
 					<tbody>
 						<c:choose>
 							<c:when test="${fn:length(posts.content) ne 0}">
 								<c:forEach items="${posts.content}" var="post" varStatus="status">
-									<tr class="">
+									<c:url var="viewPostLink" value="/board/PostDetails">
+										<c:param name="id" value="${post.id}"/>
+									</c:url>
+									<tr>
 										<td>${post.id}</td>
-										<td>${post.title}</td>
-										<td>${post.userName}</td>
-										<td>${post.regDate}</td>
+										<td><a name="viewPost" href="${viewPostLink}">
+											<c:choose>
+												<c:when test="${fn:length(post.title) > 35}">
+													${fn:substring(post.title,0,34)}...
+												</c:when>
+												<c:otherwise>
+													${post.title}
+												</c:otherwise>
+											</c:choose>
+										</a></td>
+										<td>${post.userName}<c:if test="${empty post.userId}"> &#60;A&#62;</c:if></td>
+										<td>${fn:substring(post.regDate,0,16)}</td>
 										<td>${post.views}</td>
 									</tr>
 								</c:forEach>
@@ -76,8 +88,7 @@
 
 				<div class="clearfix"></div>
 				<span data-placement="top" data-toggle="tooltip" title="New Post">
-					<button class="btn btn-primary btn-xs" data-title="Edit"
-						data-toggle="modal" data-target="#edit">
+					<button class="btn btn-primary btn-xs" type="button" onclick="window.location.href='PostDetails'; return false;">
 						<i class="fas fa-pencil-alt"></i>
 					</button>
 				</span>
@@ -99,40 +110,5 @@
 			</div>
 		</div>
 	</div>
-</div>
-
-
-<div class="modal fade" id="edit" tabindex="-1" role="dialog"
-	aria-labelledby="edit" aria-hidden="true">
-	<div class="modal-dialog">
-		<form:form class="modal-content" action="writePost" method="POST" modelAttribute="PostRequestModel" >
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"
-					aria-hidden="true">
-					<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-				</button>
-				<h4 class="modal-title custom_align" id="Heading">New Post</h4>
-			</div>
-			<div class="modal-body">
-				<div class="form-group">
-					<form:input class="form-control " type="text" path="userName" placeholder="Your Name" />
-				</div>
-				<div class="form-group">
-					<form:input class="form-control " type="password" path="password" placeholder="Password" />
-				</div>
-				<div class="form-group">
-					<form:input class="form-control " type="text" path="title" placeholder="Title" />
-				</div>
-				<div class="form-group">
-					<form:textarea rows="5" class="form-control" path="content" placeholder="Contents" />
-				</div>
-			</div>
-			<div class="modal-footer ">
-				<input type="submit" value="Save" class="btn btn-warning btn-lg" style="width: 100%;" />
-			</div>
-		</form:form>
-		<!-- /.modal-content -->
-	</div>
-	<!-- /.modal-dialog -->
 </div>
 </html>

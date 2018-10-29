@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import kyj.rest.mvc.demo.entity.PostEntity;
 
 @Repository
-public interface BoardRepository extends JpaRepository<PostEntity, Long>{
+public interface BoardRepository extends JpaRepository<PostEntity, Integer>{
 	
 }

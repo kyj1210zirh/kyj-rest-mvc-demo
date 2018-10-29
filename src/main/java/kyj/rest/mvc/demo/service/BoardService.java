@@ -10,5 +10,7 @@ import kyj.rest.mvc.demo.request.PostRequestModel;
 
 public interface BoardService{
 	Page<PostEntity> getPosts(int page, int limit);
-	void writePost(PostEntity Post);
+	PostRequestModel getPost(int id);
+	void writePost(PostRequestModel Post);
+	
 }
