@@ -1,5 +1,6 @@
 package kyj.rest.mvc.demo.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -15,13 +16,16 @@ import javax.validation.constraints.NotEmpty;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Getter
 @Setter
 @Table(name="posts")
-public class PostEntity {
+public class PostEntity implements Serializable{
 	
+	private static final long serialVersionUID = 8995832218716920042L;
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
@@ -31,9 +35,11 @@ public class PostEntity {
 	@Column
 	private String userId;
 	
+	@NotEmpty
 	@Column(nullable=false)
 	private String userName;
 	
+	@NotEmpty
 	@Column(nullable=false)
 	private String password;
 	
@@ -52,4 +58,6 @@ public class PostEntity {
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(insertable = false, columnDefinition = "datetime default now()")
 	private Date regDate = new Date();
+	
+	
 }

@@ -5,47 +5,58 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
 <title>게시글 목록</title>
-<link rel="stylesheet"
-	href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
-	integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
-	crossorigin="anonymous">
-<link rel="stylesheet"
-	href="https://use.fontawesome.com/releases/v5.4.2/css/all.css"
-	integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns"
-	crossorigin="anonymous">
+<link rel='stylesheet' href='/webjars/bootstrap/4.1.3/css/bootstrap.min.css'>
+<script src="/webjars/jquery/3.3.1/jquery.min.js"></script>
+<script src="/webjars/popper.js/1.14.4/umd/popper.min.js"></script>
+<script src="/webjars/bootstrap/4.1.3/js/bootstrap.min.js"></script>
 <script defer
 	src="https://use.fontawesome.com/releases/v5.4.2/js/all.js"
 	integrity="sha384-wp96dIgDl5BLlOXb4VMinXPNiB32VYBSoXOoiARzSTXY+tsK8yDTYfvdTyqzdGGN"
 	crossorigin="anonymous"></script>
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-	integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-	crossorigin="anonymous"></script>
-<script
-	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
-	integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
-	crossorigin="anonymous"></script>
-<script
-	src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
-	integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
-	crossorigin="anonymous"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
 		$("[data-toggle=tooltip]").tooltip();
+		let searchParams = new URLSearchParams(window.location.search);
+		if(searchParams.has('limit')){
+			let param = searchParams.get('limit')
+			$('#oplimit option:selected').removeAttr("selected");
+			$('#oplimit').find('#' + param).prop("selected",true);
+		}
 	});
+	
+	function changeLimit(){
+		var limit = {limit: $('#oplimit option:selected').val()};
+		location.search = $.param(limit);
+	}
 </script>
 </head>
-
 <div class="container">
+	<header>
+      <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+          <form:form action="search" method="POST" class="form-inline mt-2 mt-md-0" >
+            <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search" name="searchWord">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+          </form:form>
+      </nav>
+    </header>
 	<div class="row">
 		<div class="col-md-12">
-			<h4>My Board</h4>
+			<div>
+				<h4>My Board</h4>
+				<select onchange="changeLimit()" id="oplimit" style="float: right">
+					<option value="20" id="20">20개</option>
+					<option value="30" id="30">30개</option>
+					<option value="50" id="50">50개</option>
+				</select>
+			</div>
 			<div class="table-responsive">
 				<table id="mytable" class="table table-bordred table-striped">
 					<thead>
 						<tr>
-							<th width="7%">No</th>
+							<th width="7%"><button>No</button></th>
 							<th width="42%">Title</th>
 							<th width="14%">Name</th>
 							<th width="20%">Date</th>
@@ -56,15 +67,15 @@
 						<c:choose>
 							<c:when test="${fn:length(posts.content) ne 0}">
 								<c:forEach items="${posts.content}" var="post" varStatus="status">
-									<c:url var="viewPostLink" value="/board/PostDetails">
-										<c:param name="id" value="${post.id}"/>
+									<c:url var="viewPostLink" value="/board/PostDetails/${post.id}">
+										<%-- <c:param name="id" value="${post.id}"/> --%>
 									</c:url>
 									<tr>
 										<td>${post.id}</td>
 										<td><a name="viewPost" href="${viewPostLink}">
 											<c:choose>
-												<c:when test="${fn:length(post.title) > 35}">
-													${fn:substring(post.title,0,34)}...
+												<c:when test="${fn:length(post.title) > 30}">
+													${fn:substring(post.title,0,29)}...
 												</c:when>
 												<c:otherwise>
 													${post.title}
@@ -87,12 +98,13 @@
 				</table>
 
 				<div class="clearfix"></div>
+				
 				<span data-placement="top" data-toggle="tooltip" title="New Post">
-					<button class="btn btn-primary btn-xs" type="button" onclick="window.location.href='PostDetails'; return false;">
+					<button class="btn btn-primary btn-xs" type="button" onclick="window.location.href='writePost'; return false;">
 						<i class="fas fa-pencil-alt"></i>
 					</button>
 				</span>
-				<nav aria-label="Page navigation example">
+				<!-- <nav aria-label="Page navigation example">
 				<ul class="pagination">
 					<li class="page-item"><a class="page-link" href="#"
 						aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
@@ -106,7 +118,7 @@
 							class="sr-only">Next</span>
 					</a></li>
 				</ul>
-				</nav>
+				</nav> -->
 			</div>
 		</div>
 	</div>
