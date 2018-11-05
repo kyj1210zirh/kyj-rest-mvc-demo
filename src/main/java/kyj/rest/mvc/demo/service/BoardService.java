@@ -11,7 +11,7 @@ import kyj.rest.mvc.demo.response.AjaxResponseBody;
 
 public interface BoardService{
 	Page<PostEntity> getPosts(int page, int limit);
-	Page<PostEntity> getPosts(String searchWord, int page, int limit);
+	Page<PostEntity> getPosts(int page, int limit, String searchOption, String searchWord);
 	PostRequestModel getPost(int id);
 	void writePost(PostRequestModel postModel);
 	void deletePost(PostRequestModel postModel);

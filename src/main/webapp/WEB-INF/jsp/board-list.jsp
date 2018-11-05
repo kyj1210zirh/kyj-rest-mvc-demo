@@ -37,15 +37,21 @@
 	<header>
       <nav class="navbar navbar-expand-md navbar-dark bg-dark">
           <form:form action="search" method="POST" class="form-inline mt-2 mt-md-0" >
+          	<select class="form-control mr-sm-2" name="searchOption">
+          		<option value="1">제목</option>
+          		<option value="2">내용</option>
+          		<option value="3">제목+내용</option>
+          		<option value="4">작성자</option>
+          	</select>
             <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search" name="searchWord">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
           </form:form>
       </nav>
     </header>
-	<div class="row">
+	<div class="row" style="margin-top: 5px;">
 		<div class="col-md-12">
 			<div>
-				<h4>My Board</h4>
+				<h4><a class="text-dark" style="text-decoration: none" href="/board/list">My Board</a></h4>
 				<select onchange="changeLimit()" id="oplimit" style="float: right">
 					<option value="20" id="20">20개</option>
 					<option value="30" id="30">30개</option>
@@ -56,7 +62,7 @@
 				<table id="mytable" class="table table-bordred table-striped">
 					<thead>
 						<tr>
-							<th width="7%"><button>No</button></th>
+							<th width="7%">No</th>
 							<th width="42%">Title</th>
 							<th width="14%">Name</th>
 							<th width="20%">Date</th>
@@ -72,7 +78,7 @@
 									</c:url>
 									<tr>
 										<td>${post.id}</td>
-										<td><a name="viewPost" href="${viewPostLink}">
+										<td><a class="text-dark" name="viewPost" href="${viewPostLink}">
 											<c:choose>
 												<c:when test="${fn:length(post.title) > 30}">
 													${fn:substring(post.title,0,29)}...

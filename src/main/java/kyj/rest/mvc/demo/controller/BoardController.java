@@ -4,12 +4,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -40,13 +37,10 @@ public class BoardController {
 	@Autowired
 	BoardService boardService;
 	
-	static final Logger LOG = LoggerFactory.getLogger(BoardController.class);
-	
 	//게시글 리스트 페이지로
 	@GetMapping(path="/list")
 	public String showBoard(Model model, @RequestParam(value = "page", defaultValue = "0") int page,
 			@RequestParam(value = "limit", defaultValue = "20") int limit) {
-		LOG.info("************************* show Board list *************************");
 		model.addAttribute("posts", boardService.getPosts(page, limit));
 		return "board-list";
 	}
@@ -55,7 +49,6 @@ public class BoardController {
 	@GetMapping(path="/PostDetails/{id}")
 	public String PostDetails(Model model, @PathVariable(value = "id") int id) {
 		PostRequestModel postModel = boardService.getPost(id);
-		postModel.setPassword(null);
 		model.addAttribute("PostRequestModel", postModel);
 		return "board-PostDetails";
 	}
@@ -76,9 +69,12 @@ public class BoardController {
 	
 	//게시글 검색
 	@PostMapping(path="/search")
-	public String serachPosts(Model model, @RequestParam(value = "page", defaultValue = "0") int page,
-			@RequestParam(value = "limit", defaultValue = "20") int limit, @RequestParam("searchWord") String searchWord) {
-		model.addAttribute("posts", boardService.getPosts(searchWord, page, limit));
+	public String serachPosts(Model model
+			, @RequestParam(value = "page", defaultValue = "0") int page
+			, @RequestParam(value = "limit", defaultValue = "20") int limit
+			, @RequestParam(value = "searchWord") String searchWord
+			, @RequestParam(value = "searchOption") String searchOption) {
+		model.addAttribute("posts", boardService.getPosts(page, limit, searchOption, searchWord));
 		return "board-list";
 	}
 	

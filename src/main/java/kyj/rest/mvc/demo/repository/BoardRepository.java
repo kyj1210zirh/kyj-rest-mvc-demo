@@ -21,6 +21,9 @@ public interface BoardRepository extends JpaRepository<PostEntity, Integer>{
 	@Query("UPDATE PostEntity p SET p.views = p.views + 1 WHERE p.id = :id")
 	void addViews(@Param("id") int id);
 
-	@Query("SELECT p FROM PostEntity p WHERE p.userName LIKE %:serachWord%")
-	Page<PostEntity> findAllByUserName(@Param("serachWord") String searchWord, Pageable pageable);
+	Page<PostEntity> findBytitleContaining(String searchWord, Pageable pageableRequest);
+	Page<PostEntity> findBycontentContaining(String searchWord, Pageable pageableRequest);
+	//Page<PostEntity> findBytitleOrcontentContaining(String searchWord, Pageable pageableRequest);
+	//SELECT * FROM posts WHERE user_name LIKE %?% ORDER BY id DESC limit ?
+	Page<PostEntity> findByuserNameContaining(String searchWord, Pageable pageable);	
 }
